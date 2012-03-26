@@ -1,0 +1,11 @@
+*ReSharper*
+*.suo
+*.user
+*.cache
+bin
+obj
+Debug
+Release
+_notes
+.DS_Store
+*.ncrunchsolution
