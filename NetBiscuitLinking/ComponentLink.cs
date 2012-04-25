@@ -13,6 +13,7 @@ namespace NetBiscuitLinking
     /// Extends Tridion.ContentDelivery.Web.UI.ComponentLink,
     /// handles dynamic linking for BML-markup
     /// </summary>
+    [ParseChildren(true, "OutputMarkup")]
     public class ComponentLink : tridion.ComponentLink
     {
         [DefaultValue("None")]
@@ -20,58 +21,70 @@ namespace NetBiscuitLinking
         [Category("Appearance")]
         public string NetBiscuitLinkType { get; set; }
 
+        [PersistenceMode(PersistenceMode.InnerProperty)]
+        public string OutputMarkup { get; set; }
+
         private BMLLinkType biscuitLinkType;
 
+        private const string TCM_URI_PLACE_HOLDER = @"{0}";
         private const string BML_URL_MARKUP = @"[url=""{0}""]{1}[/url]";
         private const string BML_URLNOFOLLOW_MARKUP = @"[urlnofollow=""{0}""]{1}[/urlnofollow]";
         private const string BML_LINK_MARKUP = @"<link href=""{0}"">{1}</link>";
+        private const string BML_CELL_MARKUP = @"<cell href=""{0}"">{1}</cell>";
 
         protected override void OnInit(EventArgs e)
         {
-            /*
+            // for .Net 4.0 
             if(!Enum.TryParse(NetBiscuitLinkType, true, out biscuitLinkType))
             {
                 biscuitLinkType = BMLLinkType.None;
-            }*/
-            biscuitLinkType = (BMLLinkType) Enum.Parse(typeof(BMLLinkType),NetBiscuitLinkType,true);
+            
+            } 
+
+            // for .NET 3.5
+            //biscuitLinkType = (BMLLinkType)Enum.Parse(typeof(BMLLinkType), NetBiscuitLinkType, true);
+
             base.OnInit(e);
         }
 
-        protected override void Render (HtmlTextWriter writer)
+        protected override void Render(HtmlTextWriter writer)
         {
-            if (biscuitLinkType == BMLLinkType.None)
+            string markup = GetMarkup();
+
+            if (biscuitLinkType != BMLLinkType.None && !string.IsNullOrEmpty(markup))
+            {
+                writer.Write(markup);
+            }
+            else
             {
                 base.Render(writer);
-                return;
             }
-            writer.Write(GetBMLLink());
         }
 
-        private string GetBMLLink()
+        private string GetMarkup()
         {
             string url = GetHref();
 
-            if(string.IsNullOrEmpty(url))
+            if (string.IsNullOrEmpty(url))
             {
                 return string.Empty;
             }
+            if (!string.IsNullOrEmpty(OutputMarkup))
+            {
+                return GetOutputMarkup(url);
+            }
 
-            return String.Format(GetBMLLinkMarkUp(),url,LinkText);
+            return GetBMLLink(url);
         }
 
-        private string GetBMLLinkMarkUp()
+        private string GetOutputMarkup(string url)
         {
-            switch (biscuitLinkType)
-            {
-                case BMLLinkType.Url:
-                    return BML_URL_MARKUP;
-                case BMLLinkType.UrlNoFollow:
-                    return BML_URLNOFOLLOW_MARKUP;
-                case BMLLinkType.Link:
-                    return BML_LINK_MARKUP;
-                default:
-                    throw new ArgumentException("Unknown NetBiscuitLinkType: " + biscuitLinkType, "NetBiscuitLinkType");
-            }
+            return OutputMarkup.Replace(TCM_URI_PLACE_HOLDER, url);
+        }
+
+        private string GetBMLLink(string url)
+        {
+            return String.Format(GetBMLLinkMarkUp(), url, LinkText);
         }
 
         private string GetHref()
@@ -85,6 +98,23 @@ namespace NetBiscuitLinking
                 }
             }
             return url;
+        }
+
+        private string GetBMLLinkMarkUp()
+        {
+            switch (biscuitLinkType)
+            {
+                case BMLLinkType.Url:
+                    return BML_URL_MARKUP;
+                case BMLLinkType.UrlNoFollow:
+                    return BML_URLNOFOLLOW_MARKUP;
+                case BMLLinkType.Link:
+                    return BML_LINK_MARKUP;
+                case BMLLinkType.Cell:
+                    return BML_CELL_MARKUP;
+                default:
+                    throw new ArgumentException("Unknown NetBiscuitLinkType: " + biscuitLinkType, "NetBiscuitLinkType");
+            }
         }
 
         private string ResolveComponentLink(tridionLinking.ComponentLink componentLink)
@@ -103,6 +133,7 @@ namespace NetBiscuitLinking
         None,
         Url,
         UrlNoFollow,
-        Link
+        Link,
+        Cell
     }
 }

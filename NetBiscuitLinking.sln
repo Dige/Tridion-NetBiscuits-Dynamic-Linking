@@ -3,6 +3,8 @@ Microsoft Visual Studio Solution File, Format Version 11.00
 # Visual Studio 2010
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NetBiscuitLinking", "NetBiscuitLinking\NetBiscuitLinking.csproj", "{D1589E6C-7156-4801-9D81-04D6BD2AD632}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NetBiscuitTemplating", "NetBiscuitTemplating\NetBiscuitTemplating.csproj", "{91F3D936-2474-4066-9ED5-42A0CC62E8DB}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -13,6 +15,10 @@ Global
 		{D1589E6C-7156-4801-9D81-04D6BD2AD632}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D1589E6C-7156-4801-9D81-04D6BD2AD632}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{D1589E6C-7156-4801-9D81-04D6BD2AD632}.Release|Any CPU.Build.0 = Release|Any CPU
+		{91F3D936-2474-4066-9ED5-42A0CC62E8DB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{91F3D936-2474-4066-9ED5-42A0CC62E8DB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{91F3D936-2474-4066-9ED5-42A0CC62E8DB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{91F3D936-2474-4066-9ED5-42A0CC62E8DB}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
